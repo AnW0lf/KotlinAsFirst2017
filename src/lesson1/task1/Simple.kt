@@ -43,8 +43,6 @@ fun main(args: Array<String>) {
     // Решаем x^2 - 3*x + 2 = 0
     val x1x2 = quadraticRootProduct(1.0, -3.0, 2.0)
     println("Root product: $x1x2")
-
-    println(lengthInMeters(8, 2, 11))
 }
 
 /**
@@ -135,12 +133,10 @@ fun accountInThreeYears(initial: Int, percent: Int): Double
  */
 fun numberRevert(number: Int): Int
 {
-    var revers  = ""
-    var i = number.toString().length - 1
-    while (i >= 0)
+    var revers = ""
+    for (i in number.toString().length - 1 downTo 0)
     {
         revers += number.toString()[i]
-        i--
     }
     return revers.toInt()
 }
