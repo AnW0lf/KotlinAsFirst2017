@@ -1,4 +1,5 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson1.task1
 
 import java.lang.Math.*
@@ -43,6 +44,14 @@ fun main(args: Array<String>) {
     // Решаем x^2 - 3*x + 2 = 0
     val x1x2 = quadraticRootProduct(1.0, -3.0, 2.0)
     println("Root product: $x1x2")
+    println(seconds(8, 20, 35))
+    println(lengthInMeters(8, 2 , 11))
+    println(angleInRadian(36, 14, 35))
+    println(trackLength(3.0, .0, .0, 4.0))
+    println(thirdDigit(3801))
+    println(travelMinutes(9, 25, 13, 1))
+    println(accountInThreeYears(100, 10))
+    println(numberRevert(478))
 }
 
 /**
@@ -51,7 +60,8 @@ fun main(args: Array<String>) {
  * Пользователь задает время в часах, минутах и секундах, например, 8:20:35.
  * Рассчитать время в секундах, прошедшее с начала суток (30035 в данном случае).
  */
-fun seconds(hours: Int, minutes: Int, seconds: Int): Int = hours * 3600 + minutes * 60 + seconds
+fun seconds(hours: Int, minutes: Int, seconds: Int): Int =
+        hours * 3600 + minutes * 60 + seconds
 
 /**
  * Тривиальная
@@ -60,7 +70,8 @@ fun seconds(hours: Int, minutes: Int, seconds: Int): Int = hours * 3600 + minute
  * Определить длину того же отрезка в метрах (в данном случае 18.98).
  * 1 сажень = 3 аршина = 48 вершков, 1 вершок = 4.445 см.
  */
-fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double = (((sagenes * 3) + arshins) * 16 + vershoks) * .04445
+fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double =
+        (((sagenes * 3) + arshins) * 16 + vershoks) * .04445
 
 /**
  * Тривиальная
@@ -68,10 +79,9 @@ fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double = (((sagen
  * Пользователь задает угол в градусах, минутах и секундах (например, 36 градусов 14 минут 35 секунд).
  * Вывести значение того же угла в радианах (например, 0.63256).
  */
-fun angleInRadian(grad: Int, min: Int, sec: Int): Double
-{
-    var rad = grad.toDouble() * 3600 + min.toDouble() * 60 + sec.toDouble()
-    rad /= (180 * 3600)
+fun angleInRadian(grad: Int, min: Int, sec: Int): Double {
+    var rad: Double = grad.toDouble() + (min.toDouble() +  sec.toDouble() / 60.0) / 60.0
+    rad *= (Math.PI / 180.0)
     return rad
 }
 
@@ -81,7 +91,8 @@ fun angleInRadian(grad: Int, min: Int, sec: Int): Double
  * Найти длину отрезка, соединяющего точки на плоскости с координатами (x1, y1) и (x2, y2).
  * Например, расстояние между (3, 0) и (0, 4) равно 5
  */
-fun trackLength(x1: Double, y1: Double, x2: Double, y2: Double): Double = sqrt( sqr(x1 - x2) + sqr(y1 - y2) )
+fun trackLength(x1: Double, y1: Double, x2: Double, y2: Double): Double =
+        sqrt(sqr(x1 - x2) + sqr(y1 - y2))
 
 /**
  * Простая
@@ -98,13 +109,8 @@ fun thirdDigit(number: Int): Int = (number % 1000) / 100
  * прибыл на станцию назначения в h2 часов m2 минут того же дня (например в 13:01).
  * Определите время поезда в пути в минутах (в данном случае 216).
  */
-fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minutesArrive: Int): Int
-{
-    if (((hoursArrive * 60) + minutesArrive) > ((hoursDepart * 60) + minutesDepart))
-        return ((hoursArrive * 60) + minutesArrive) - ((hoursDepart * 60) + minutesDepart)
-    else
-        return (24 * 60) - ((hoursDepart * 60) + minutesDepart) + ((hoursArrive * 60) + minutesArrive)
-}
+fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minutesArrive: Int): Int =
+        ((hoursArrive * 60) + minutesArrive) - ((hoursDepart * 60) + minutesDepart)
 
 /**
  * Простая
@@ -113,16 +119,12 @@ fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minute
  * Сколько денег будет на счету через 3 года (с учётом сложных процентов)?
  * Например, 100 рублей под 10% годовых превратятся в 133.1 рубля
  */
-fun accountInThreeYears(initial: Int, percent: Int): Double
-{
-    var deposit : Double = initial . toDouble ()
-    var i = 0
-    while (i < 3)
-    {
-        deposit *= (1.0 + percent.toDouble()/100.0)
-        i++
+fun accountInThreeYears(initial: Int, percent: Int): Double {
+    var deposit: Double = initial.toDouble()
+    for (i in 0 until 3) {
+        deposit *= (1.0 + percent.toDouble() / 100.0)
     }
-    return  deposit
+    return deposit
 }
 
 /**
@@ -131,12 +133,4 @@ fun accountInThreeYears(initial: Int, percent: Int): Double
  * Пользователь задает целое трехзначное число (например, 478).
  *Необходимо вывести число, полученное из заданного перестановкой цифр в обратном порядке (например, 874).
  */
-fun numberRevert(number: Int): Int
-{
-    var revers = ""
-    for (i in number.toString().length - 1 downTo 0)
-    {
-        revers += number.toString()[i]
-    }
-    return revers.toInt()
-}
+fun numberRevert(number: Int): Int = number.toString().reversed().toInt()
