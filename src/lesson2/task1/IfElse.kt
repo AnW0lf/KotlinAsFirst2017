@@ -43,7 +43,7 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
 fun ageDescription(age: Int): String {
     if (age in 1..199) {
         return when {
-            age % 10 == 0 || age % 10 in 5..9 -> "$age лет"
+            age % 10 == 0 || age % 10 in 5..9 || age % 100 in 11..19 -> "$age лет"
             age % 10 == 1 -> "$age год"
             age % 10 in 2..4 -> "$age года"
             else -> "age is not exist"
@@ -84,7 +84,12 @@ fun timeForHalfWay(t1: Double, v1: Double,
  */
 fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
-                       rookX2: Int, rookY2: Int): Int = TODO()
+                       rookX2: Int, rookY2: Int): Int = when {
+    (rookX1 == kingX || rookY1 == kingY) && (rookX2 != kingX && rookY2 != kingY) -> 1
+    (rookX2 == kingX || rookY2 == kingY) && (rookX1 != kingX && rookY1 != kingY) -> 2
+    (rookX2 == kingX || rookY2 == kingY) && (rookX1 == kingX || rookY1 == kingY) -> 3
+    else -> 0
+}
 
 /**
  * Простая
@@ -98,7 +103,12 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
  */
 fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           rookX: Int, rookY: Int,
-                          bishopX: Int, bishopY: Int): Int = TODO()
+                          bishopX: Int, bishopY: Int): Int = when {
+    (Math.abs(bishopX - kingX) != Math.abs(bishopY - kingY)) && (rookX == kingX || rookY == kingY) -> 1
+    (Math.abs(bishopX - kingX) == Math.abs(bishopY - kingY)) && (rookX != kingX && rookY != kingY) -> 2
+    (Math.abs(bishopX - kingX) == Math.abs(bishopY - kingY)) && (rookX == kingX || rookY == kingY) -> 3
+    else -> 0
+}
 
 /**
  * Простая
