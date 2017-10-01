@@ -44,14 +44,6 @@ fun main(args: Array<String>) {
     // Решаем x^2 - 3*x + 2 = 0
     val x1x2 = quadraticRootProduct(1.0, -3.0, 2.0)
     println("Root product: $x1x2")
-    println(seconds(8, 20, 35))
-    println(lengthInMeters(8, 2 , 11))
-    println(angleInRadian(36, 14, 35))
-    println(trackLength(3.0, .0, .0, 4.0))
-    println(thirdDigit(3801))
-    println(travelMinutes(9, 25, 13, 1))
-    println(accountInThreeYears(100, 10))
-    println(numberRevert(478))
 }
 
 /**
