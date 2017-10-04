@@ -1,4 +1,5 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson2.task1
 
 import lesson1.task1.discriminant
@@ -61,15 +62,15 @@ fun ageDescription(age: Int): String {
  */
 fun timeForHalfWay(t1: Double, v1: Double,
                    t2: Double, v2: Double,
-                   t3: Double, v3: Double): Double{
+                   t3: Double, v3: Double): Double {
     val s1 = t1 * v1
     val s2 = t2 * v2
     val s3 = t3 * v3
     val s = s1 + s2 + s3
     return when {
-        s/2 <= s1 -> s/2 / v1
-        (s/2 - s1) <= s2 -> t1 + (s/2 - s1) / v2
-        else -> t1 + t2 + (s/2 - (s1 + s2)) / v3
+        s / 2 <= s1 -> s / 2 / v1
+        (s / 2 - s1) <= s2 -> t1 + (s / 2 - s1) / v2
+        else -> t1 + t2 + (s / 2 - (s1 + s2)) / v3
     }
 }
 
@@ -110,6 +111,10 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
     else -> 0
 }
 
+fun sqr(x: Double): Double = x * x
+
+fun sqr(x: Int): Int = x * x
+
 /**
  * Простая
  *
@@ -118,7 +123,17 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
  * прямоугольным (вернуть 1) или тупоугольным (вернуть 2).
  * Если такой треугольник не существует, вернуть -1.
  */
-fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
+fun triangleKind(a: Double, b: Double, c: Double): Int {
+    val maxEdge: Double = Math.max(Math.max(a, b), c)
+    val minEdge: Double = Math.min(Math.min(a, b), c)
+    val middleEdge = a + b + c - minEdge - maxEdge
+    return when{
+        maxEdge > minEdge + middleEdge -> -1
+        sqr(minEdge) + sqr(middleEdge) > sqr(maxEdge) -> 0
+        sqr(minEdge) + sqr(middleEdge) == sqr(maxEdge) -> 1
+        else -> 2
+    }
+}
 
 /**
  * Средняя
@@ -128,14 +143,10 @@ fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int
-{
-    return when
-    {
-        c in a..b && d >= b -> b - c
-        a in c..d && b >= d -> d - a
-        a in c..d && b in c..d -> b - a
-        c in a..b && d in a..b -> d - c
-        else -> -1
-    }
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = when {
+    c in a..b && d >= b -> b - c
+    a in c..d && b >= d -> d - a
+    a in c..d && b in c..d -> b - a
+    c in a..b && d in a..b -> d - c
+    else -> -1
 }
