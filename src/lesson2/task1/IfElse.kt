@@ -46,8 +46,7 @@ fun ageDescription(age: Int): String {
         return when {
             age % 10 == 0 || age % 10 in 5..9 || age % 100 in 11..19 -> "$age лет"
             age % 10 == 1 -> "$age год"
-            age % 10 in 2..4 -> "$age года"
-            else -> "age is not exist"
+            else -> "$age года"
         }
     }
     return "age is out of range"
@@ -86,9 +85,9 @@ fun timeForHalfWay(t1: Double, v1: Double,
 fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
                        rookX2: Int, rookY2: Int): Int = when {
-    (rookX1 == kingX || rookY1 == kingY) && (rookX2 != kingX && rookY2 != kingY) -> 1
-    (rookX2 == kingX || rookY2 == kingY) && (rookX1 != kingX && rookY1 != kingY) -> 2
     (rookX2 == kingX || rookY2 == kingY) && (rookX1 == kingX || rookY1 == kingY) -> 3
+    (rookX1 == kingX || rookY1 == kingY) -> 1
+    (rookX2 == kingX || rookY2 == kingY) -> 2
     else -> 0
 }
 
@@ -105,9 +104,9 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
 fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           rookX: Int, rookY: Int,
                           bishopX: Int, bishopY: Int): Int = when {
-    (Math.abs(bishopX - kingX) != Math.abs(bishopY - kingY)) && (rookX == kingX || rookY == kingY) -> 1
-    (Math.abs(bishopX - kingX) == Math.abs(bishopY - kingY)) && (rookX != kingX && rookY != kingY) -> 2
     (Math.abs(bishopX - kingX) == Math.abs(bishopY - kingY)) && (rookX == kingX || rookY == kingY) -> 3
+    (Math.abs(bishopX - kingX) == Math.abs(bishopY - kingY)) -> 2
+    (rookX == kingX || rookY == kingY) -> 1
     else -> 0
 }
 
@@ -127,7 +126,7 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
     val maxEdge: Double = Math.max(Math.max(a, b), c)
     val minEdge: Double = Math.min(Math.min(a, b), c)
     val middleEdge = a + b + c - minEdge - maxEdge
-    return when{
+    return when {
         maxEdge > minEdge + middleEdge -> -1
         sqr(minEdge) + sqr(middleEdge) > sqr(maxEdge) -> 0
         sqr(minEdge) + sqr(middleEdge) == sqr(maxEdge) -> 1
