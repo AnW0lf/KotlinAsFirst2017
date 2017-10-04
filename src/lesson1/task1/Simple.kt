@@ -72,7 +72,7 @@ fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double =
  * Вывести значение того же угла в радианах (например, 0.63256).
  */
 fun angleInRadian(grad: Int, min: Int, sec: Int): Double {
-    var rad: Double = grad.toDouble() + (min.toDouble() +  sec.toDouble() / 60.0) / 60.0
+    var rad: Double = grad.toDouble() + (min.toDouble() + sec.toDouble() / 60.0) / 60.0
     rad *= (Math.PI / 180.0)
     return rad
 }
@@ -105,19 +105,32 @@ fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minute
         ((hoursArrive * 60) + minutesArrive) - ((hoursDepart * 60) + minutesDepart)
 
 /**
+ * Возведение в натуральную степень целого числа
+ */
+fun naturalExponentiation(number: Int, exponent: Int): Int {
+    var x = number
+    for (i in 1 until exponent) x *= number
+    return x
+}
+
+/**
+ * Возведение в натуральную степень числа с плавающей точкой
+ */
+fun naturalExponentiation(number: Double, exponent: Int): Double {
+    var x = number
+    for (i in 1 until exponent) x *= number
+    return x
+}
+
+/**
  * Простая
  *
  * Человек положил в банк сумму в s рублей под p% годовых (проценты начисляются в конце года).
  * Сколько денег будет на счету через 3 года (с учётом сложных процентов)?
  * Например, 100 рублей под 10% годовых превратятся в 133.1 рубля
  */
-fun accountInThreeYears(initial: Int, percent: Int): Double {
-    var deposit: Double = initial.toDouble()
-    for (i in 0 until 3) {
-        deposit *= (1.0 + percent.toDouble() / 100.0)
-    }
-    return deposit
-}
+fun accountInThreeYears(initial: Int, percent: Int): Double =
+        initial.toDouble() * naturalExponentiation(1.0 + percent.toDouble() / 100.0, 3)
 
 /**
  * Простая
