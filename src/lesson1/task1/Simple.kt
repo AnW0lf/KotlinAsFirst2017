@@ -108,16 +108,22 @@ fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minute
  * Возведение в натуральную степень целого числа
  */
 fun naturalExponentiation(number: Int, exponent: Int): Int {
-    return if (exponent == 1) number
-    else number * naturalExponentiation(number, exponent - 1)
+    var result = 1
+    for (i in 0 until exponent) {
+        result *= number
+    }
+    return result
 }
 
 /**
  * Возведение в натуральную степень числа с плавающей точкой
  */
-fun naturalExponentiation(number: Double, exponent: Int): Double {
-    return if (exponent == 1) number
-    else number * naturalExponentiation(number, exponent - 1)
+fun naturalExponentiation(number: Double, exponent: Int) : Double {
+    var result = 1.0
+    for (i in 0 until exponent) {
+        result *= number
+    }
+    return result
 }
 
 /**
