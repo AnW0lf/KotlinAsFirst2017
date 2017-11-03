@@ -88,6 +88,7 @@ fun fib(n: Int): Int {
 } //if (n > 2) fib(n - 1) + fib(n - 2) else 1
 
 fun gcd(m: Int, n: Int): Int {
+    if (m == n) return m
     var minDivX = minDivisor(m)
     var minDivY = minDivisor(n)
     var x = m / minDivX
@@ -104,7 +105,7 @@ fun gcd(m: Int, n: Int): Int {
                 x /= minDivX
             }
             else -> {
-                max = minDivX
+                if (max < minDivX) max = minDivX
                 minDivY = minDivisor(y)
                 y /= minDivY
                 minDivX = minDivisor(x)
@@ -281,7 +282,7 @@ fun squareSequenceDigit(n: Int): Int {
     var i = 1
     var str = ""
     while (str.length <= n) {
-        str += sqr(i).toString()
+        str += (i * i).toString()
         i++
     }
     return str[n - 1].toString().toInt()
