@@ -69,7 +69,7 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  * Найти количество цифр в заданном числе n.
  * Например, число 1 содержит 1 цифру, 456 -- 3 цифры, 65536 -- 5 цифр.
  */
-fun digitNumber(n: Int): Int = if (n < 10) 1 else 1 + digitNumber(n / 10)
+fun digitNumber(n: Int): Int = if (n in -9..9) 1 else 1 + digitNumber(n / 10)
 
 /**
  * Простая
@@ -77,7 +77,7 @@ fun digitNumber(n: Int): Int = if (n < 10) 1 else 1 + digitNumber(n / 10)
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int = if (n < 3) 1 else fib(n - 1) + fib(n - 2)
+fun fib(n: Int): Int = if (n > 2) fib(n - 1) + fib(n - 2) else 1
 
 fun gcd(m: Int, n: Int): Int {
     var minDivX = minDivisor(m)
@@ -104,7 +104,7 @@ fun gcd(m: Int, n: Int): Int {
             }
         }
         println("$m and $n : $max : $minDivX and $minDivY")
-    } while (!isCoPrime( x, y))
+    } while (!isCoPrime(x, y))
     return max
 }
 
@@ -131,7 +131,7 @@ fun minDivisor(n: Int): Int {
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int = if (n / minDivisor(n) > 1) n / minDivisor(n) else n
+fun maxDivisor(n: Int): Int = n / minDivisor(n)
 
 /**
  * Простая
@@ -192,7 +192,7 @@ fun sin(x: Double, eps: Double): Double {
         t = pow(-1.0, k) * pow(number, 2 * k + 1) / factorial(2 * k + 1)
         sum += t
         k++
-    } while (Math.abs(t) > eps)
+    } while (Math.abs(t) >= eps)
     return sum
 }
 
@@ -214,7 +214,7 @@ fun cos(x: Double, eps: Double): Double {
         t = pow(-1.0, k) * pow(number, 2 * k) / factorial(2 * k)
         sum += t
         k++
-    } while (Math.abs(t) > eps)
+    } while (Math.abs(t) >= eps)
     return sum
 }
 
@@ -242,9 +242,10 @@ fun revert(n: Int): Int {
  * 15751 -- палиндром, 3653 -- нет.
  */
 fun isPalindrome(n: Int): Boolean {
-    return if (n > 99 && n % 10 == revert(n) % 10) isPalindrome(revert(n / 10) / 10)
-    else if (n < 10) true
-    else n % 11 == 0
+    return if (n > 99 && n % 10 == n.toString()[0].toString().toInt())
+        isPalindrome(n.toString().removeRange(0, 1).toInt() / 10)
+    else if (n in 10..99 && n % 11 == 0) true
+    else n in 0..9
 }
 
 /**
