@@ -77,7 +77,15 @@ fun digitNumber(n: Int): Int = if (n in -9..9) 1 else 1 + digitNumber(n / 10)
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int = if (n > 2) fib(n - 1) + fib(n - 2) else 1
+fun fib(n: Int): Int {
+    var x = 1
+    var y = 1
+    for (i in 3..n) {
+        if (i % 2 == 0) x += y
+        if (i % 2 == 1) y += x
+    }
+    return Math.max(x, y)
+} //if (n > 2) fib(n - 1) + fib(n - 2) else 1
 
 fun gcd(m: Int, n: Int): Int {
     var minDivX = minDivisor(m)
@@ -103,7 +111,6 @@ fun gcd(m: Int, n: Int): Int {
                 x /= minDivX
             }
         }
-        println("$m and $n : $max : $minDivX and $minDivY")
     } while (!isCoPrime(x, y))
     return max
 }
@@ -192,7 +199,7 @@ fun sin(x: Double, eps: Double): Double {
         t = pow(-1.0, k) * pow(number, 2 * k + 1) / factorial(2 * k + 1)
         sum += t
         k++
-    } while (Math.abs(t) >= eps)
+    } while (Math.abs(t) > eps)
     return sum
 }
 
@@ -214,7 +221,7 @@ fun cos(x: Double, eps: Double): Double {
         t = pow(-1.0, k) * pow(number, 2 * k) / factorial(2 * k)
         sum += t
         k++
-    } while (Math.abs(t) >= eps)
+    } while (Math.abs(t) > eps)
     return sum
 }
 
@@ -273,7 +280,7 @@ fun hasDifferentDigits(n: Int): Boolean {
 fun squareSequenceDigit(n: Int): Int {
     var i = 1
     var str = ""
-    while (str.length < n) {
+    while (str.length <= n) {
         str += sqr(i).toString()
         i++
     }
@@ -289,10 +296,10 @@ fun squareSequenceDigit(n: Int): Int {
  */
 fun fibSequenceDigit(n: Int): Int {
     var row = ""
-    var i = 0
+    var i = 1
     while (row.length <= n) {
         row += fib(i).toString()
         i++
     }
-    return row[n].toString().toInt()
+    return row[n - 1].toString().toInt()
 }
