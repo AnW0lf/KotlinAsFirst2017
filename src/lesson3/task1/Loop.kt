@@ -170,13 +170,13 @@ fun sin(x: Double, eps: Double): Double {
     while (number >= 2 * Math.PI)
         number -= 2 * Math.PI
     var t: Double
-    var sum = 0.0
-    var k = 0
+    var sum = number
+    var k = 1
     do {
         t = pow(-1.0, k) * pow(number, 2 * k + 1) / factorial(2 * k + 1)
         sum += t
         k++
-    } while (Math.abs(t) > eps)
+    } while (eps < Math.abs(t))
     return sum
 }
 
@@ -192,13 +192,13 @@ fun cos(x: Double, eps: Double): Double {
     while (number >= 2 * Math.PI)
         number -= 2 * Math.PI
     var t: Double
-    var sum = 0.0
-    var k = 0
+    var sum = 1.0
+    var k = 1
     do {
         t = pow(-1.0, k) * pow(number, 2 * k) / factorial(2 * k)
         sum += t
         k++
-    } while (Math.abs(t) > eps)
+    } while (eps < Math.abs(t))
     return sum
 }
 
@@ -226,10 +226,19 @@ fun revert(n: Int): Int {
  * 15751 -- палиндром, 3653 -- нет.
  */
 fun isPalindrome(n: Int): Boolean {
-    return if (n > 99 && n % 10 == n.toString()[0].toString().toInt())
-        isPalindrome(n.toString().removeRange(0, 1).toInt() / 10)
-    else if (n in 10..99 && n % 11 == 0) true
-    else n in 0..9
+    if (n in 0..9) return true
+    var num = n.toString()
+    val first: String
+    val second: String
+    if (num.length % 2 == 0) {
+        first = num.substring(0, num.length / 2)
+        second = num.substring(num.length / 2, num.length)
+    } else {
+        num = num.removeRange(num.length / 2, num.length / 2 + 1)
+        first = num.substring(0, num.length / 2)
+        second = num.substring(num.length / 2, num.length)
+    }
+    return first == second.reversed()
 }
 
 /**
