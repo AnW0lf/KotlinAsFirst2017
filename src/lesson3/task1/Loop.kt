@@ -87,34 +87,10 @@ fun fib(n: Int): Int {
     return Math.max(x, y)
 } //if (n > 2) fib(n - 1) + fib(n - 2) else 1
 
-fun gcd(m: Int, n: Int): Int {
-    if (m == n) return m
-    var minDivX = minDivisor(m)
-    var minDivY = minDivisor(n)
-    var x = m / minDivX
-    var y = n / minDivY
-    var max = 1
-    do {
-        when {
-            minDivX > minDivY -> {
-                minDivY = minDivisor(y)
-                y /= minDivY
-            }
-            minDivX < minDivY -> {
-                minDivX = minDivisor(x)
-                x /= minDivX
-            }
-            else -> {
-                if (max < minDivX) max = minDivX
-                minDivY = minDivisor(y)
-                y /= minDivY
-                minDivX = minDivisor(x)
-                x /= minDivX
-            }
-        }
-    } while (!isCoPrime(x, y))
-    return max
-}
+/**
+ * Алгоритм Евклида
+ */
+fun gcd(m: Int, n: Int): Int = if (n > 0) gcd(n, m % n) else m
 
 /**
  * Простая
