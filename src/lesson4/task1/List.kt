@@ -349,7 +349,7 @@ fun russian(n: Int): String {
     val unitsMap: Map<String, String> = mapOf("1" to "один", "2" to "два", "3" to "три",
             "4" to "четыре", "5" to "пять", "6" to "шесть", "7" to "семь", "8" to "восемь",
             "9" to "девять")
-    val thousandUnitsMap: Map<String, String> = mapOf("1" to "одина", "2" to "две", "3" to "три",
+    val thousandUnitsMap: Map<String, String> = mapOf("1" to "одна", "2" to "две", "3" to "три",
             "4" to "четыре", "5" to "пять", "6" to "шесть", "7" to "семь", "8" to "восемь",
             "9" to "девять")
     var rus = ""
