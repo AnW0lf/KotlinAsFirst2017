@@ -4,6 +4,7 @@ package lesson4.task1
 
 import lesson1.task1.discriminant
 import lesson1.task1.sqr
+import lesson2.task1.timeForHalfWay
 import lesson3.task1.minDivisor
 
 /**
@@ -131,11 +132,9 @@ fun mean(list: List<Double>): Double = if (list.isNotEmpty()) list.sum() / list.
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun center(list: MutableList<Double>): MutableList<Double> {
-    if (list.isNotEmpty()) {
-        val mean = mean(list)
-        for (i in 0 until list.count())
-            list[i] -= mean
-    }
+    val mean = mean(list)
+    for (i in 0 until list.count())
+        list[i] -= mean
     return list
 }
 
@@ -153,21 +152,11 @@ fun times(a: List<Double>, b: List<Double>): Double {
     return product
 }
 
-fun pow(num: Double, power: Int): Double {
-    if (power == 0) return 1.0
-    var x = num
-    for (i in 1 until power)
-        x *= num
-    return x
-}
+fun pow(num: Double, power: Int): Double =
+        Math.pow(num, power.toDouble())
 
-fun pow(num: Int, power: Int): Int {
-    if (power == 0) return 1
-    var x = num
-    for (i in 1 until power)
-        x *= num
-    return x
-}
+fun pow(num: Int, power: Int): Int =
+        Math.pow(num.toDouble(), power.toDouble()).toInt()
 
 /**
  * Средняя
@@ -195,8 +184,7 @@ fun polynom(p: List<Double>, x: Double): Double {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun accumulate(list: MutableList<Double>): MutableList<Double> {
-    if (list.isNotEmpty())
-        for (i in 1 until list.count()) list[i] += list[i - 1]
+    for (i in 1 until list.count()) list[i] += list[i - 1]
     return list
 }
 
@@ -209,7 +197,7 @@ fun accumulate(list: MutableList<Double>): MutableList<Double> {
  */
 fun factorize(n: Int): List<Int> {
     var num = n
-    val list: MutableList<Int> = mutableListOf()
+    val list = mutableListOf<Int>()
     while (num > 1) {
         list.add(minDivisor(num))
         num /= list.last()
@@ -224,14 +212,11 @@ fun factorize(n: Int): List<Int> {
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  */
 fun factorizeToString(n: Int): String {
-    val list = factorize(n)
-    var row = ""
-    for (i in 0 until list.count()) {
-        row += list[i]
-        if (i < list.count() - 1)
-            row += "*"
-    }
-    return row
+    val list = factorize(n).map { "$it" }
+    val str = StringBuilder(list[0])
+    for (i in 1 until list.count())
+        str.append("*${list[i]}")
+    return str.toString()
 }
 
 /**
@@ -242,11 +227,10 @@ fun factorizeToString(n: Int): String {
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
 fun convert(n: Int, base: Int): List<Int> {
-    val list: MutableList<Int> = mutableListOf()
+    val list = mutableListOf<Int>()
     var num = n
     var power = 0
-    while (pow(base, power + 1) <= n)
-        if (pow(base, power) <= n) power++
+    while (pow(base, power + 1) <= n) power++
     for (i in power downTo 0) {
         list.add(num / pow(base, i))
         num -= list.last() * pow(base, i)
@@ -264,13 +248,15 @@ fun convert(n: Int, base: Int): List<Int> {
  */
 fun convertToString(n: Int, base: Int): String {
     val list = convert(n, base)
-    val map: Map<Int, String> = mapOf(0 to "0", 1 to "1", 2 to "2", 3 to "3", 4 to "4", 5 to "5", 6 to "6",
-            7 to "7", 8 to "8", 9 to "9", 10 to "a", 11 to "b", 12 to "c", 13 to "d", 14 to "e", 15 to "f", 16 to "g",
-            17 to "h", 18 to "i", 19 to "j", 20 to "k", 21 to "l", 22 to "m", 23 to "n", 24 to "o", 25 to "p", 26 to "q",
-            27 to "r", 28 to "s", 29 to "t", 30 to "u", 31 to "v", 32 to "w", 33 to "x", 34 to "y", 35 to "z")
-    var row = ""
-    for (i in list) row += map[i]
-    return row
+    val map = mapOf(0 to "0", 1 to "1", 2 to "2", 3 to "3",
+            4 to "4", 5 to "5", 6 to "6", 7 to "7", 8 to "8", 9 to "9", 10 to "a",
+            11 to "b", 12 to "c", 13 to "d", 14 to "e", 15 to "f", 16 to "g", 17 to "h",
+            18 to "i", 19 to "j", 20 to "k", 21 to "l", 22 to "m", 23 to "n", 24 to "o",
+            25 to "p", 26 to "q", 27 to "r", 28 to "s", 29 to "t", 30 to "u", 31 to "v",
+            32 to "w", 33 to "x", 34 to "y", 35 to "z")
+    val row = StringBuilder()
+    for (i in list) row.append(map[i])
+    return row.toString()
 }
 
 /**
@@ -297,11 +283,12 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * Например: str = "13c", base = 14 -> 250
  */
 fun decimalFromString(str: String, base: Int): Int {
-    val list: MutableList<Int> = mutableListOf()
-    val map: Map<String, Int> = mapOf("0" to 0, "1" to 1, "2" to 2, "3" to 3, "4" to 4, "5" to 5, "6" to 6,
-            "7" to 7, "8" to 8, "9" to 9, "a" to 10, "b" to 11, "c" to 12, "d" to 13, "e" to 14, "f" to 15, "g" to 16,
-            "h" to 17, "i" to 18, "j" to 19, "k" to 20, "l" to 21, "m" to 22, "n" to 23, "o" to 24, "p" to 25, "q" to 26,
-            "r" to 27, "s" to 28, "t" to 29, "u" to 30, "v" to 31, "w" to 32, "x" to 33, "y" to 34, "z" to 35)
+    val list = mutableListOf<Int>()
+    val map = mapOf("0" to 0, "1" to 1, "2" to 2, "3" to 3, "4" to 4, "5" to 5,
+            "6" to 6, "7" to 7, "8" to 8, "9" to 9, "a" to 10, "b" to 11, "c" to 12, "d" to 13, "e" to 14,
+            "f" to 15, "g" to 16, "h" to 17, "i" to 18, "j" to 19, "k" to 20, "l" to 21, "m" to 22,
+            "n" to 23, "o" to 24, "p" to 25, "q" to 26, "r" to 27, "s" to 28, "t" to 29, "u" to 30,
+            "v" to 31, "w" to 32, "x" to 33, "y" to 34, "z" to 35)
     for (i in str) list.add(map.getValue(i.toString()))
     return decimal(list, base)
 }
@@ -315,18 +302,18 @@ fun decimalFromString(str: String, base: Int): Int {
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
 fun roman(n: Int): String {
-    val arab_dict: List<Int> = listOf(1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000)
-    val rom_dict: List<String> = listOf("I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M")
+    val arab_dict= listOf(1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000)
+    val rom_dict= listOf("I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M")
     var arab = n
-    var rom = ""
+    val rom = StringBuilder()
     var i = arab_dict.count() - 1
     while (arab > 0) {
         if (arab >= arab_dict[i]) {
-            rom += rom_dict[i]
+            rom.append(rom_dict[i])
             arab -= arab_dict[i]
         } else i--
     }
-    return rom
+    return rom.toString()
 }
 
 /**
@@ -363,8 +350,7 @@ fun russian(n: Int): String {
         if ((largerPart % 100) / 10 == 1) {
             if (rus.isNotEmpty()) rus += " "
             rus += "${tensMap[(largerPart % 100).toString()]}"
-        }
-        else {
+        } else {
             if ((largerPart % 100) / 10 in 2..9) {
                 if (rus.isNotEmpty()) rus += " "
                 rus += "${decadesMap[((largerPart % 100) / 10).toString()]}"
@@ -386,8 +372,7 @@ fun russian(n: Int): String {
     if ((lessPart % 100) / 10 == 1) {
         if (rus.isNotEmpty()) rus += " "
         rus += "${tensMap[(lessPart % 100).toString()]}"
-    }
-    else {
+    } else {
         if ((lessPart % 100) / 10 in 2..9) {
             if (rus.isNotEmpty()) rus += " "
             rus += "${decadesMap[((lessPart % 100) / 10).toString()]}"
