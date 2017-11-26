@@ -252,6 +252,8 @@ fun mostExpensive(description: String): String {
  * Вернуть -1, если roman не является корректным римским числом
  */
 fun fromRoman(roman: String): Int {
+    if (!roman.matches(Regex("""[M]*[CM]*[D]*[CD]*[C]*[XC]*[L]*[XL]*[X]*[IX]*[V]*[IV]*[I]*""")))
+        return -1
     val arab_dict: List<Int> = listOf(1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000)
     val rom_dict: List<String> = listOf("I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M")
     var arab = 0
