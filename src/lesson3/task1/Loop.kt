@@ -3,7 +3,7 @@
 package lesson3.task1
 
 import lesson2.task1.sqr
-import java.lang.Math
+import java.lang.Math.*
 
 
 fun main(args: Array<String>) {
@@ -98,7 +98,7 @@ fun gcd(m: Int, n: Int): Int = if (n > 0) gcd(n, m % n) else m
  * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
  * минимальное число k, которое делится и на m и на n без остатка
  */
-fun lcm(m: Int, n: Int): Int = Math.abs(m * n) / gcd(m, n)
+fun lcm(m: Int, n: Int): Int = abs(m * n) / gcd(m, n)
 
 /**
  * Простая
@@ -106,7 +106,7 @@ fun lcm(m: Int, n: Int): Int = Math.abs(m * n) / gcd(m, n)
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    for (i in 2..Math.sqrt(n.toDouble()).toInt()) if (n % i == 0) return i
+    for (i in 2..floor(sqrt(n.toDouble())).toInt()) if (n % i == 0) return i
     return n
 }
 
@@ -125,17 +125,17 @@ fun maxDivisor(n: Int): Int = n / minDivisor(n)
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
-    var num_1 = m
-    while (num_1 > 1) {
-        val minDivisor_1 = minDivisor(num_1)
-        var num_2 = n
-        while (num_2 > 1) {
-            val minDivisor_2 = minDivisor(num_2)
-            num_2 /= minDivisor_2
+    var first = m
+    while (first > 1) {
+        val minDivisor_1 = minDivisor(first)
+        var second = n
+        while (second > 1) {
+            val minDivisor_2 = minDivisor(second)
+            second /= minDivisor_2
             if (minDivisor_1 == minDivisor_2) return false
             if (minDivisor_1 < minDivisor_2) break
         }
-        num_1 /= minDivisor_1
+        first /= minDivisor_1
     }
     return true
 }
@@ -147,16 +147,10 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * то есть, существует ли такое целое k, что m <= k*k <= n.
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
-fun squareBetweenExists(m: Int, n: Int): Boolean = sqr(Math.sqrt(n.toDouble()).toInt()) >= m
+fun squareBetweenExists(m: Int, n: Int): Boolean = floor(sqr(sqrt(n.toDouble()))).toInt() >= m
 
 
-fun pow(num: Double, power: Int): Double {
-    if (power == 0) return 1.0
-    var x = num
-    for (i in 1 until power)
-        x *= num
-    return x
-}
+fun pow(num: Double, power: Int): Double = Math.pow(num, power.toDouble())
 
 /**
  * Средняя
@@ -167,8 +161,9 @@ fun pow(num: Double, power: Int): Double {
  */
 fun sin(x: Double, eps: Double): Double {
     var number = x
-    while (number >= 2 * Math.PI)
-        number -= 2 * Math.PI
+    println(signum(number))
+    while (number <= -2 * PI || number >= 2 * PI)
+        number -= signum(number) * 2 * Math.PI
     var t: Double
     var sum = number
     var k = 1
@@ -189,8 +184,8 @@ fun sin(x: Double, eps: Double): Double {
  */
 fun cos(x: Double, eps: Double): Double {
     var number = x
-    while (number >= 2 * Math.PI)
-        number -= 2 * Math.PI
+    while (number <= -2 * PI || number >= 2 * PI)
+        number -= signum(number) * 2 * Math.PI
     var t: Double
     var sum = 1.0
     var k = 1
@@ -270,7 +265,8 @@ fun squareSequenceDigit(n: Int): Int {
         i++
         length -= digitNumber(i * i)
     }
-    return (i * i).toString()[(i * i).toString().length - Math.abs(length) - 1].toString().toInt()
+    return (i * i).toString()[(i * i).toString().length - Math.abs(length) - 1]
+            .toString().toInt()
 }
 
 /**
@@ -281,11 +277,12 @@ fun squareSequenceDigit(n: Int): Int {
  * Например, 2-я цифра равна 1, 9-я 2, 14-я 5.
  */
 fun fibSequenceDigit(n: Int): Int {
-    var row = ""
-    var i = 1
-    while (row.length <= n) {
-        row += fib(i).toString()
+    var length = n
+    var i = 0
+    while (length > 0) {
         i++
+        length -= digitNumber(fib(i))
     }
-    return row[n - 1].toString().toInt()
+    return (fib(i)).toString()[(fib(i)).toString().length - Math.abs(length) - 1]
+            .toString().toInt()
 }
