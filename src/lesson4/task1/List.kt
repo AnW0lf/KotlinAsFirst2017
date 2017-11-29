@@ -302,8 +302,8 @@ fun decimalFromString(str: String, base: Int): Int {
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
 fun roman(n: Int): String {
-    val arab_dict= listOf(1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000)
-    val rom_dict= listOf("I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M")
+    val arab_dict = listOf(1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000)
+    val rom_dict = listOf("I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M")
     var arab = n
     val rom = StringBuilder()
     var i = arab_dict.count() - 1
@@ -316,6 +316,41 @@ fun roman(n: Int): String {
     return rom.toString()
 }
 
+fun localRussian(n: Int, thousands: Boolean): String {
+    if (n !in 0..999) return ""
+    val hundredsMap: Map<Int, String> = mapOf(1 to "сто", 2 to "двести", 3 to "триста",
+            4 to "четыреста", 5 to "пятьсот", 6 to "шестьсот", 7 to "семьсот",
+            8 to "восемьсот", 9 to "девятьсот")
+    val decadesMap: Map<Int, String> = mapOf(2 to "двадцать", 3 to "тридцать",
+            4 to "сорок", 5 to "пятьдесят", 6 to "шестьдесят", 7 to "семьдесят",
+            8 to "восемьдесят", 9 to "девяносто")
+    val tensMap: Map<Int, String> = mapOf(10 to "десять", 11 to "одиннадцать", 12 to "двенадцать",
+            13 to "тринадцать", 14 to "четырнадцать", 15 to "пятнадцать", 16 to "шестнадцать",
+            17 to "семнадцать", 18 to "восемнадцать", 19 to "девятнадцать")
+    val unitsMap: Map<Int, String> = mapOf(1 to "один", 2 to "два", 3 to "три",
+            4 to "четыре", 5 to "пять", 6 to "шесть", 7 to "семь", 8 to "восемь",
+            9 to "девять")
+    val thousandUnitsMap: Map<Int, String> = mapOf(1 to "одна", 2 to "две", 3 to "три",
+            4 to "четыре", 5 to "пять", 6 to "шесть", 7 to "семь", 8 to "восемь",
+            9 to "девять")
+    val sb = StringBuilder()
+    if (n / 100 in 1..9) sb.append("${hundredsMap[n / 100]} ")
+    if (n % 100 in 10..19) sb.append("${tensMap[n % 100]} ")
+    else {
+        if (n % 100 in 20..99) sb.append("${decadesMap[((n % 100) / 10)]} ")
+        if (n % 10 in 1..9) {
+            if (thousands) sb.append("${thousandUnitsMap[n % 10]} ")
+            else sb.append("${unitsMap[n % 10]}")
+        }
+    }
+    if (thousands) {
+        if (n % 100 !in 10..19 && n % 10 == 1) sb.append("тысяча")
+        else if (n % 100 !in 10..19 && n % 10 in 2..4) sb.append("тысячи")
+        else sb.append("тысяч")
+    }
+    return sb.toString()
+}
+
 /**
  * Очень сложная
  *
@@ -323,64 +358,9 @@ fun roman(n: Int): String {
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String {
-    val hundredsMap: Map<String, String> = mapOf("1" to "сто", "2" to "двести", "3" to "триста",
-            "4" to "четыреста", "5" to "пятьсот", "6" to "шестьсот", "7" to "семьсот",
-            "8" to "восемьсот", "9" to "девятьсот")
-    val decadesMap: Map<String, String> = mapOf("2" to "двадцать", "3" to "тридцать",
-            "4" to "сорок", "5" to "пятьдесят", "6" to "шестьдесят", "7" to "семьдесят",
-            "8" to "восемьдесят", "9" to "девяносто")
-    val tensMap: Map<String, String> = mapOf("10" to "десять", "11" to "одиннадцать", "12" to "двенадцать",
-            "13" to "тринадцать", "14" to "четырнадцать", "15" to "пятнадцать", "16" to "шестнадцать",
-            "17" to "семнадцать", "18" to "восемнадцать", "19" to "девятнадцать")
-    val unitsMap: Map<String, String> = mapOf("1" to "один", "2" to "два", "3" to "три",
-            "4" to "четыре", "5" to "пять", "6" to "шесть", "7" to "семь", "8" to "восемь",
-            "9" to "девять")
-    val thousandUnitsMap: Map<String, String> = mapOf("1" to "одна", "2" to "две", "3" to "три",
-            "4" to "четыре", "5" to "пять", "6" to "шесть", "7" to "семь", "8" to "восемь",
-            "9" to "девять")
-    var rus = ""
-    if (n == 0) rus += "ноль"
-    if (n >= 1000) {
-        val largerPart = n / 1000
-        if (largerPart / 100 in 1..9) {
-            if (rus.isNotEmpty()) rus += " "
-            rus += "${hundredsMap[(largerPart / 100).toString()]}"
-        }
-        if ((largerPart % 100) / 10 == 1) {
-            if (rus.isNotEmpty()) rus += " "
-            rus += "${tensMap[(largerPart % 100).toString()]}"
-        } else {
-            if ((largerPart % 100) / 10 in 2..9) {
-                if (rus.isNotEmpty()) rus += " "
-                rus += "${decadesMap[((largerPart % 100) / 10).toString()]}"
-            }
-            if (largerPart % 10 in 1..9) {
-                if (rus.isNotEmpty()) rus += " "
-                rus += "${thousandUnitsMap[(largerPart % 10).toString()]}"
-            }
-        }
-        if (largerPart % 10 == 1) rus += " тысяча"
-        else if (largerPart % 10 in 2..4) rus += " тысячи"
-        else rus += " тысяч"
-    }
-    val lessPart = n % 1000
-    if (lessPart / 100 in 1..9) {
-        if (rus.isNotEmpty()) rus += " "
-        rus += "${hundredsMap[(lessPart / 100).toString()]}"
-    }
-    if ((lessPart % 100) / 10 == 1) {
-        if (rus.isNotEmpty()) rus += " "
-        rus += "${tensMap[(lessPart % 100).toString()]}"
-    } else {
-        if ((lessPart % 100) / 10 in 2..9) {
-            if (rus.isNotEmpty()) rus += " "
-            rus += "${decadesMap[((lessPart % 100) / 10).toString()]}"
-        }
-        if (lessPart % 10 in 1..9) {
-            if (rus.isNotEmpty()) rus += " "
-            rus += "${unitsMap[(lessPart % 10).toString()]}"
-        }
-    }
-    return rus
+fun russian(n: Int): String = when {
+    n == 0 -> "ноль"
+    n < 1000 -> localRussian(n, false).trimEnd()
+    n > 1000 && n % 1000 == 0 -> localRussian(n / 1000, true).trimEnd()
+    else -> "${localRussian(n / 1000, true)} ${localRussian(n % 1000, false)}".trimEnd()
 }

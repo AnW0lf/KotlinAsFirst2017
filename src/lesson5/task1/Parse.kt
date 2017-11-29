@@ -179,19 +179,17 @@ fun bestHighJump(jumps: String): Int {
  */
 fun plusMinus(expression: String): Int {
     val queue = expression.split(' ')
-    var result : Int
+    var result: Int
     if (queue[0].matches(Regex("""\d+"""))) result = queue[0].toInt()
     else throw IllegalArgumentException()
-    for (i in 1 until queue.count() - 1 step 2 ) {
-        if (queue[i + 1].matches(Regex("""\d+""")))
-        {
+    for (i in 1 until queue.count() - 1 step 2) {
+        if (queue[i + 1].matches(Regex("""\d+"""))) {
             when {
-                queue[i] == "+"  -> result += queue[i+1].toInt()
-                queue[i] == "-"  -> result -= queue[i+1].toInt()
+                queue[i] == "+" -> result += queue[i + 1].toInt()
+                queue[i] == "-" -> result -= queue[i + 1].toInt()
                 else -> throw IllegalArgumentException()
             }
-        }
-        else throw IllegalArgumentException()
+        } else throw IllegalArgumentException()
     }
     return result
 }
@@ -208,8 +206,7 @@ fun plusMinus(expression: String): Int {
 fun firstDuplicateIndex(str: String): Int {
     val list = str.toLowerCase().split(' ')
     var index = 0
-    for (i in 0 until list.count() - 1)
-    {
+    for (i in 0 until list.count() - 1) {
         if (list[i] == list[i + 1]) return index
         else index += list[i].count() + 1
     }
@@ -234,8 +231,7 @@ fun mostExpensive(description: String): String {
         if (product.matches(Regex("""[А-я]+\s\d+\.\d"""))) {
             if (Regex("""\d+\.\d""").find(product)!!.value.toDouble() > maxPrice)
                 maxPrice = Regex("""\d+\.\d""").find(product)!!.value.toDouble()
-        }
-        else return ""
+        } else return ""
     }
     return Regex("""([А-я]+)\s$maxPrice""").find(description)!!.groupValues[1]
 }
@@ -309,10 +305,9 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     var pos: Int = cells / 2
     var comPos = 0
     var i = 0
-    if (!commands.matches(Regex("""[+-<>\[\] ]+""")))
-        throw IllegalArgumentException("Illegal command symbol")
-    if (commands.asSequence().count { it == '[' } != commands.asSequence().count { it == ']' })
-        throw IllegalArgumentException("Illegal format of loop")
+    if (!commands.matches(Regex("""[+-<>\[\] ]*""")) ||
+            commands.asSequence().count { it == '[' } != commands.asSequence().count { it == ']' })
+        throw IllegalArgumentException()
     val list: MutableList<Int> = mutableListOf()
     for (j in 0 until cells) list.add(0)
     while (comPos < commands.count() && i < limit) {
