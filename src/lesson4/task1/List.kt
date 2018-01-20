@@ -4,8 +4,8 @@ package lesson4.task1
 
 import lesson1.task1.discriminant
 import lesson1.task1.sqr
-import lesson2.task1.timeForHalfWay
 import lesson3.task1.minDivisor
+import java.lang.Math.*
 
 /**
  * Пример
@@ -17,7 +17,7 @@ fun sqRoots(y: Double) =
             y < 0 -> listOf()
             y == 0.0 -> listOf(0.0)
             else -> {
-                val root = Math.sqrt(y)
+                val root = sqrt(y)
                 // Результат!
                 listOf(-root, root)
             }
@@ -37,8 +37,8 @@ fun biRoots(a: Double, b: Double, c: Double): List<Double> {
     val d = discriminant(a, b, c)
     if (d < 0.0) return listOf()
     if (d == 0.0) return sqRoots(-b / (2 * a))
-    val y1 = (-b + Math.sqrt(d)) / (2 * a)
-    val y2 = (-b - Math.sqrt(d)) / (2 * a)
+    val y1 = (-b + sqrt(d)) / (2 * a)
+    val y2 = (-b - sqrt(d)) / (2 * a)
     return sqRoots(y1) + sqRoots(y2)
 }
 
@@ -113,7 +113,7 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
 fun abs(v: List<Double>): Double {
     var sum = 0.0
     for (i in v) sum += sqr(i)
-    return Math.sqrt(sum)
+    return sqrt(sum)
 }
 
 /**
@@ -153,10 +153,10 @@ fun times(a: List<Double>, b: List<Double>): Double {
 }
 
 fun pow(num: Double, power: Int): Double =
-        Math.pow(num, power.toDouble())
+        pow(num, power.toDouble())
 
 fun pow(num: Int, power: Int): Int =
-        Math.pow(num.toDouble(), power.toDouble()).toInt()
+        pow(num.toDouble(), power.toDouble()).toInt()
 
 /**
  * Средняя
@@ -211,13 +211,7 @@ fun factorize(n: Int): List<Int> {
  * Разложить заданное натуральное число n > 1 на простые множители.
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  */
-fun factorizeToString(n: Int): String {
-    val list = factorize(n).map { "$it" }
-    val str = StringBuilder(list[0])
-    for (i in 1 until list.count())
-        str.append("*${list[i]}")
-    return str.toString()
-}
+fun factorizeToString(n: Int): String = factorize(n).joinToString("*")
 
 /**
  * Средняя
@@ -229,13 +223,11 @@ fun factorizeToString(n: Int): String {
 fun convert(n: Int, base: Int): List<Int> {
     val list = mutableListOf<Int>()
     var num = n
-    var power = 0
-    while (pow(base, power + 1) <= n) power++
-    for (i in power downTo 0) {
-        list.add(num / pow(base, i))
-        num -= list.last() * pow(base, i)
+    while (num > 0) {
+        list.add(num % base)
+        num /= base
     }
-    return list
+    return list.reversed()
 }
 
 /**
@@ -248,14 +240,11 @@ fun convert(n: Int, base: Int): List<Int> {
  */
 fun convertToString(n: Int, base: Int): String {
     val list = convert(n, base)
-    val map = mapOf(0 to "0", 1 to "1", 2 to "2", 3 to "3",
-            4 to "4", 5 to "5", 6 to "6", 7 to "7", 8 to "8", 9 to "9", 10 to "a",
-            11 to "b", 12 to "c", 13 to "d", 14 to "e", 15 to "f", 16 to "g", 17 to "h",
-            18 to "i", 19 to "j", 20 to "k", 21 to "l", 22 to "m", 23 to "n", 24 to "o",
-            25 to "p", 26 to "q", 27 to "r", 28 to "s", 29 to "t", 30 to "u", 31 to "v",
-            32 to "w", 33 to "x", 34 to "y", 35 to "z")
     val row = StringBuilder()
-    for (i in list) row.append(map[i])
+    for (i in list) {
+        if (i in 0..9) row.append(i)
+        else row.append((i + 87).toChar())
+    }
     return row.toString()
 }
 
@@ -284,12 +273,10 @@ fun decimal(digits: List<Int>, base: Int): Int {
  */
 fun decimalFromString(str: String, base: Int): Int {
     val list = mutableListOf<Int>()
-    val map = mapOf("0" to 0, "1" to 1, "2" to 2, "3" to 3, "4" to 4, "5" to 5,
-            "6" to 6, "7" to 7, "8" to 8, "9" to 9, "a" to 10, "b" to 11, "c" to 12, "d" to 13, "e" to 14,
-            "f" to 15, "g" to 16, "h" to 17, "i" to 18, "j" to 19, "k" to 20, "l" to 21, "m" to 22,
-            "n" to 23, "o" to 24, "p" to 25, "q" to 26, "r" to 27, "s" to 28, "t" to 29, "u" to 30,
-            "v" to 31, "w" to 32, "x" to 33, "y" to 34, "z" to 35)
-    for (i in str) list.add(map.getValue(i.toString()))
+    for (i in str) {
+        if (i in '0'..'9') list.add(i.toString().toInt())
+        else list.add(i.toInt() - 87)
+    }
     return decimal(list, base)
 }
 
@@ -302,15 +289,15 @@ fun decimalFromString(str: String, base: Int): Int {
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
 fun roman(n: Int): String {
-    val arab_dict = listOf(1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000)
-    val rom_dict = listOf("I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M")
+    val arabDict = listOf(1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000)
+    val romDict = listOf("I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M")
     var arab = n
     val rom = StringBuilder()
-    var i = arab_dict.count() - 1
+    var i = arabDict.count() - 1
     while (arab > 0) {
-        if (arab >= arab_dict[i]) {
-            rom.append(rom_dict[i])
-            arab -= arab_dict[i]
+        if (arab >= arabDict[i]) {
+            rom.append(romDict[i])
+            arab -= arabDict[i]
         } else i--
     }
     return rom.toString()
@@ -318,37 +305,32 @@ fun roman(n: Int): String {
 
 fun localRussian(n: Int, thousands: Boolean): String {
     if (n !in 0..999) return ""
-    val hundredsMap: Map<Int, String> = mapOf(1 to "сто", 2 to "двести", 3 to "триста",
-            4 to "четыреста", 5 to "пятьсот", 6 to "шестьсот", 7 to "семьсот",
-            8 to "восемьсот", 9 to "девятьсот")
-    val decadesMap: Map<Int, String> = mapOf(2 to "двадцать", 3 to "тридцать",
-            4 to "сорок", 5 to "пятьдесят", 6 to "шестьдесят", 7 to "семьдесят",
-            8 to "восемьдесят", 9 to "девяносто")
-    val tensMap: Map<Int, String> = mapOf(10 to "десять", 11 to "одиннадцать", 12 to "двенадцать",
-            13 to "тринадцать", 14 to "четырнадцать", 15 to "пятнадцать", 16 to "шестнадцать",
-            17 to "семнадцать", 18 to "восемнадцать", 19 to "девятнадцать")
-    val unitsMap: Map<Int, String> = mapOf(1 to "один", 2 to "два", 3 to "три",
-            4 to "четыре", 5 to "пять", 6 to "шесть", 7 to "семь", 8 to "восемь",
-            9 to "девять")
-    val thousandUnitsMap: Map<Int, String> = mapOf(1 to "одна", 2 to "две", 3 to "три",
-            4 to "четыре", 5 to "пять", 6 to "шесть", 7 to "семь", 8 to "восемь",
-            9 to "девять")
-    val sb = StringBuilder()
-    if (n / 100 in 1..9) sb.append("${hundredsMap[n / 100]} ")
-    if (n % 100 in 10..19) sb.append("${tensMap[n % 100]} ")
+    val hundreds = listOf("сто", "двести", "триста", "четыреста",
+            "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
+    val decades = listOf("двадцать", "тридцать", "сорок",
+            "пятьдесят", "шестьдесят", "семьдесят", "восемьдесят", "девяносто")
+    val tens = listOf("десять", "одиннадцать", "двенадцать",
+            "тринадцать", "четырнадцать", "пятнадцать", "шестнадцать",
+            "семнадцать", "восемнадцать", "девятнадцать")
+    val units = listOf("один", "два", "три", "четыре", "пять",
+            "шесть", "семь", "восемь", "девять")
+    val thousandUnits = listOf("одна", "две")
+    val row = mutableListOf<String>()
+    if (n / 100 in 1..9) row.add(hundreds[n / 100 - 1])
+    if (n % 100 in 10..19) row.add(tens[n % 100 - 10])
     else {
-        if (n % 100 in 20..99) sb.append("${decadesMap[((n % 100) / 10)]} ")
+        if (n % 100 in 20..99) row.add(decades[(n % 100) / 10 - 2])
         if (n % 10 in 1..9) {
-            if (thousands) sb.append("${thousandUnitsMap[n % 10]} ")
-            else sb.append("${unitsMap[n % 10]}")
+            if (thousands && n % 10 in 1..2) row.add(thousandUnits[n % 10 - 1])
+            else row.add(units[n % 10 - 1])
         }
     }
     if (thousands) {
-        if (n % 100 !in 10..19 && n % 10 == 1) sb.append("тысяча")
-        else if (n % 100 !in 10..19 && n % 10 in 2..4) sb.append("тысячи")
-        else sb.append("тысяч")
+        if (n % 100 !in 10..19 && n % 10 == 1) row.add("тысяча")
+        else if (n % 100 !in 10..19 && n % 10 in 2..4) row.add("тысячи")
+        else row.add("тысяч")
     }
-    return sb.toString()
+    return row.joinToString(" ")
 }
 
 /**
@@ -360,7 +342,6 @@ fun localRussian(n: Int, thousands: Boolean): String {
  */
 fun russian(n: Int): String = when {
     n == 0 -> "ноль"
-    n < 1000 -> localRussian(n, false).trimEnd()
-    n > 1000 && n % 1000 == 0 -> localRussian(n / 1000, true).trimEnd()
+    n < 1000 -> localRussian(n, false)
     else -> "${localRussian(n / 1000, true)} ${localRussian(n % 1000, false)}".trimEnd()
 }
