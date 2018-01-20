@@ -30,7 +30,7 @@ fun factorial(n: Int): Double {
  */
 fun isPrime(n: Int): Boolean {
     if (n < 2) return false
-    for (m in 2..Math.sqrt(n.toDouble()).toInt()) {
+    for (m in 2..sqrt(n.toDouble()).toInt()) {
         if (n % m == 0) return false
     }
     return true
@@ -84,8 +84,8 @@ fun fib(n: Int): Int {
         if (i % 2 == 0) x += y
         if (i % 2 == 1) y += x
     }
-    return Math.max(x, y)
-} //if (n > 2) fib(n - 1) + fib(n - 2) else 1
+    return max(x, y)
+}
 
 /**
  * Алгоритм Евклида
@@ -127,15 +127,15 @@ fun maxDivisor(n: Int): Int = n / minDivisor(n)
 fun isCoPrime(m: Int, n: Int): Boolean {
     var first = m
     while (first > 1) {
-        val minDivisor_1 = minDivisor(first)
+        val firstMinDiv = minDivisor(first)
         var second = n
         while (second > 1) {
-            val minDivisor_2 = minDivisor(second)
-            second /= minDivisor_2
-            if (minDivisor_1 == minDivisor_2) return false
-            if (minDivisor_1 < minDivisor_2) break
+            val secondMinDiv = minDivisor(second)
+            second /= secondMinDiv
+            if (firstMinDiv == secondMinDiv) return false
+            if (firstMinDiv < secondMinDiv) break
         }
-        first /= minDivisor_1
+        first /= firstMinDiv
     }
     return true
 }
@@ -147,10 +147,10 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * то есть, существует ли такое целое k, что m <= k*k <= n.
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
-fun squareBetweenExists(m: Int, n: Int): Boolean = floor(sqr(sqrt(n.toDouble()))).toInt() >= m
+fun squareBetweenExists(m: Int, n: Int): Boolean = sqr(sqrt(n.toDouble()).toInt()) >= m
 
 
-fun pow(num: Double, power: Int): Double = Math.pow(num, power.toDouble())
+fun pow(num: Double, power: Int): Double = pow(num, power.toDouble())
 
 /**
  * Средняя
@@ -160,10 +160,7 @@ fun pow(num: Double, power: Int): Double = Math.pow(num, power.toDouble())
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun sin(x: Double, eps: Double): Double {
-    var number = x
-    println(signum(number))
-    while (number <= -2 * PI || number >= 2 * PI)
-        number -= signum(number) * 2 * Math.PI
+    val number = x % (2 * PI) * signum(x)
     var t: Double
     var sum = number
     var k = 1
@@ -171,7 +168,7 @@ fun sin(x: Double, eps: Double): Double {
         t = pow(-1.0, k) * pow(number, 2 * k + 1) / factorial(2 * k + 1)
         sum += t
         k++
-    } while (eps < Math.abs(t))
+    } while (eps <= abs(t))
     return sum
 }
 
@@ -183,9 +180,7 @@ fun sin(x: Double, eps: Double): Double {
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun cos(x: Double, eps: Double): Double {
-    var number = x
-    while (number <= -2 * PI || number >= 2 * PI)
-        number -= signum(number) * 2 * Math.PI
+    val number = x % (2 * PI) * signum(x)
     var t: Double
     var sum = 1.0
     var k = 1
@@ -193,7 +188,7 @@ fun cos(x: Double, eps: Double): Double {
         t = pow(-1.0, k) * pow(number, 2 * k) / factorial(2 * k)
         sum += t
         k++
-    } while (eps < Math.abs(t))
+    } while (eps <= abs(t))
     return sum
 }
 
@@ -222,18 +217,8 @@ fun revert(n: Int): Int {
  */
 fun isPalindrome(n: Int): Boolean {
     if (n in 0..9) return true
-    var num = n.toString()
-    val first: String
-    val second: String
-    if (num.length % 2 == 0) {
-        first = num.substring(0, num.length / 2)
-        second = num.substring(num.length / 2, num.length)
-    } else {
-        num = num.removeRange(num.length / 2, num.length / 2 + 1)
-        first = num.substring(0, num.length / 2)
-        second = num.substring(num.length / 2, num.length)
-    }
-    return first == second.reversed()
+    val num = n.toString()
+    return num.substring(0, num.length / 2) == num.reversed().substring(0, num.length / 2)
 }
 
 /**
@@ -265,7 +250,7 @@ fun squareSequenceDigit(n: Int): Int {
         i++
         length -= digitNumber(i * i)
     }
-    return (i * i).toString()[(i * i).toString().length - Math.abs(length) - 1]
+    return (i * i).toString()[(i * i).toString().length - abs(length) - 1]
             .toString().toInt()
 }
 
@@ -283,6 +268,6 @@ fun fibSequenceDigit(n: Int): Int {
         i++
         length -= digitNumber(fib(i))
     }
-    return (fib(i)).toString()[(fib(i)).toString().length - Math.abs(length) - 1]
+    return (fib(i)).toString()[(fib(i)).toString().length - abs(length) - 1]
             .toString().toInt()
 }
