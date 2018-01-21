@@ -1,6 +1,8 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson7.task2
 
+import lesson7.task1.Cell
 import lesson7.task1.Matrix
 import lesson7.task1.createMatrix
 
@@ -47,6 +49,35 @@ operator fun Matrix<Int>.plus(other: Matrix<Int>): Matrix<Int> {
     return result
 }
 
+data class UnitVector2(var x: Int, var y: Int) {
+
+    fun rightTurn() {
+        when {
+            x > 0 && y == 0 || x < 0 && y == 0 -> {
+                y = -x
+                x = 0
+            }
+            x == 0 && y < 0 || x == 0 && y > 0 -> {
+                x = y
+                y = 0
+            }
+        }
+    }
+
+    fun leftTurn() {
+        when {
+            x > 0 && y == 0 || x < 0 && y == 0 -> {
+                y = x
+                x = 0
+            }
+            x == 0 && y < 0 || x == 0 && y > 0 -> {
+                x = -y
+                y = 0
+            }
+        }
+    }
+}
+
 /**
  * Сложная
  *
@@ -59,7 +90,19 @@ operator fun Matrix<Int>.plus(other: Matrix<Int>): Matrix<Int> {
  * 10 11 12  5
  *  9  8  7  6
  */
-fun generateSpiral(height: Int, width: Int): Matrix<Int> = TODO()
+fun generateSpiral(height: Int, width: Int): Matrix<Int> {
+    val result = createMatrix(height, width, 0)
+    var cell = Cell(0, 0)
+    val u = UnitVector2(0, 1)
+    for (i in 1..height * width) {
+        result[cell] = i
+        if (cell.row + u.x !in 0 until height || cell.column + u.y !in 0 until width
+                || result[cell.row + u.x, cell.column + u.y] != 0)
+            u.rightTurn()
+        cell = Cell(cell.row + u.x, cell.column + u.y)
+    }
+    return result
+}
 
 /**
  * Сложная
