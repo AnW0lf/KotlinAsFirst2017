@@ -98,7 +98,7 @@ fun dateDigitToStr(digital: String): String {
         val yyyy = parts[2].toInt()
         val dictionary = listOf("января", "февраля", "марта", "апреля", "мая",
                 "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря")
-        if (dictionary.size >= mm) String.format("%02d ${dictionary[mm - 1]} %d", dd, yyyy)
+        if (dictionary.size >= mm) String.format("%d ${dictionary[mm - 1]} %d", dd, yyyy)
         else ""
     } catch (e: Exception) {
         ""
