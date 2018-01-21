@@ -236,7 +236,7 @@ fun mostExpensive(description: String): String {
             }
         } else return ""
     }
-    return Regex("""([.\S]+?\s$maxPriceStr)""").find(description)!!.groupValues[1]
+    return Regex("""([.\S]+?\s)$maxPriceStr""").find(description)!!.groupValues[1]
 }
 
 /**
