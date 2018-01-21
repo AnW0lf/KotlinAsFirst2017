@@ -73,14 +73,12 @@ fun dateStrToDigit(str: String): String {
         val dd = parts[0].toInt()
         val mm = parts[1]
         val yyyy = parts[2].toInt()
-        val dictionary: Map<String, Int> = hashMapOf("января" to 1, "февраля" to 2, "марта" to 3, "апреля" to 4, "мая" to 5,
-                "июня" to 6, "июля" to 7, "августа" to 8, "сентября" to 9, "октября" to 10, "ноября" to 11, "декабря" to 12)
-        when {
-            dictionary.containsKey(mm) -> String.format("%02d.%02d.%04d", dd, dictionary[mm], yyyy)
-            else -> ""
-        }
+        val dictionary = listOf("января", "февраля", "марта", "апреля", "мая",
+                "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря")
+        if (dictionary.contains(mm)) String.format("%02d.%02d.%d", dd, dictionary.indexOf(mm) + 1, yyyy)
+        else ""
     } catch (e: Exception) {
-        ""
+        return ""
     }
 }
 
@@ -96,14 +94,12 @@ fun dateDigitToStr(digital: String): String {
     if (parts.count() != 3) return ""
     return try {
         val dd = parts[0].toInt()
-        val mm = parts[1]
+        val mm = parts[1].toInt()
         val yyyy = parts[2].toInt()
-        val dictionary: Map<String, String> = hashMapOf("01" to "января", "02" to "февраля", "03" to "марта", "04" to "апреля", "05" to "мая",
-                "06" to "июня", "07" to "июля", "08" to "августа", "09" to "сентября", "10" to "октября", "11" to "ноября", "12" to "декабря")
-        when {
-            dictionary.containsKey(mm) -> String.format("%1d ${dictionary[mm]} %04d", dd, yyyy)
-            else -> ""
-        }
+        val dictionary = listOf("января", "февраля", "марта", "апреля", "мая",
+                "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря")
+        if (dictionary.size >= mm) String.format("%02d ${dictionary[mm - 1]} %d", dd, yyyy)
+        else ""
     } catch (e: Exception) {
         ""
     }
@@ -122,11 +118,12 @@ fun dateDigitToStr(digital: String): String {
  * При неверном формате вернуть пустую строку
  */
 fun flattenPhoneNumber(phone: String): String {
-    if (!phone.matches(Regex("""[0-9 +\-()]+"""))) return ""
-    var result = ""
+    if (!phone.matches(Regex("""[\d +\-()]+"""))) return ""
+    if (!phone.contains(Regex("""\d+"""))) return ""
+    val result = StringBuilder()
     for (l in phone)
-        if (l.toString().matches(Regex("""[0-9+]"""))) result += l.toString()
-    return result
+        if (l.toString().matches(Regex("""[0-9+]"""))) result.append(l.toString())
+    return result.toString()
 }
 
 /**
@@ -143,8 +140,10 @@ fun bestLongJump(jumps: String): Int {
     if (!jumps.matches(Regex("""[\d \-%]+"""))) return -1
     val parts = jumps.split(" ")
     val attempts = mutableListOf<Int>()
-    for (part in parts)
+    for (part in parts) {
         if (part.matches(Regex("""\d+"""))) attempts.add(part.toInt())
+        else if (part.contains(Regex("""\d+"""))) return -1
+    }
     return if (attempts.isNotEmpty()) attempts.max()!!
     else -1
 }
@@ -161,10 +160,10 @@ fun bestLongJump(jumps: String): Int {
  */
 fun bestHighJump(jumps: String): Int {
     if (!jumps.matches(Regex("""[\d +\-%]+"""))) return -1
-    var str = ""
+    val str = StringBuilder()
     for (result in Regex("""(\d+\s[+])""").findAll(jumps))
-        str += " " + result.value
-    return bestLongJump(str.replace("+", ""))
+        str.append(" " + result.value)
+    return bestLongJump(str.toString().replace("+", ""))
 
 }
 
@@ -228,12 +227,12 @@ fun mostExpensive(description: String): String {
     val list = description.split("; ")
     var maxPrice = .0
     for (product in list) {
-        if (product.matches(Regex("""[А-я]+\s\d+\.\d"""))) {
+        if (product.matches(Regex("""[.\S]+?\s\d+\.\d"""))) {
             if (Regex("""\d+\.\d""").find(product)!!.value.toDouble() > maxPrice)
                 maxPrice = Regex("""\d+\.\d""").find(product)!!.value.toDouble()
         } else return ""
     }
-    return Regex("""([А-я]+)\s$maxPrice""").find(description)!!.groupValues[1]
+    return Regex("""([.\S]+?)\s$maxPrice""").find(description)!!.groupValues[1]
 }
 
 /**
@@ -248,21 +247,24 @@ fun mostExpensive(description: String): String {
  * Вернуть -1, если roman не является корректным римским числом
  */
 fun fromRoman(roman: String): Int {
-    if (!roman.matches(Regex("""[M]*[CM]*[D]*[CD]*[C]*[XC]*[L]*[XL]*[X]*[IX]*[V]*[IV]*[I]*""")))
+    if (!roman.matches(Regex
+    ("""[M]*[CM]*[D]*[CD]*[C]*[XC]*[L]*[XL]*[X]*[IX]*[V]*[IV]*[I]*"""))
+            || roman == "")
         return -1
-    val arab_dict: List<Int> = listOf(1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000)
-    val rom_dict: List<String> = listOf("I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M")
+    val arabDict = listOf(1, 4, 5, 9, 10, 40, 50,
+            90, 100, 400, 500, 900, 1000)
+    val romDict = listOf("I", "IV", "V", "IX",
+            "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M")
     var arab = 0
     var rom = roman
-    var i = rom_dict.count() - 1
+    var i = romDict.count() - 1
     while (rom.count() > 0 && i >= 0) {
-        if (rom.startsWith(rom_dict[i])) {
-            rom = rom.removeRange(0, rom_dict[i].length)
-            arab += arab_dict[i]
+        if (rom.startsWith(romDict[i])) {
+            rom = rom.removeRange(0, romDict[i].length)
+            arab += arabDict[i]
         } else i--
     }
-    return if (i < 0) -1
-    else arab
+    return arab
 }
 
 /**
@@ -308,8 +310,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     if (!commands.matches(Regex("""[+-<>\[\] ]*""")) ||
             commands.asSequence().count { it == '[' } != commands.asSequence().count { it == ']' })
         throw IllegalArgumentException()
-    val list: MutableList<Int> = mutableListOf()
-    for (j in 0 until cells) list.add(0)
+    val list = MutableList(cells, {0})
     while (comPos < commands.count() && i < limit) {
         if (pos !in 0 until cells) throw IllegalStateException("Position out of range")
         when {
