@@ -160,7 +160,7 @@ fun pow(num: Double, power: Int): Double = pow(num, power.toDouble())
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun sin(x: Double, eps: Double): Double {
-    val number = x % (2 * PI) * signum(x)
+    val number = x % (2 * PI)
     var t: Double
     var sum = number
     var k = 1
